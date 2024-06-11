@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="member">
+
+<!-- 
+	이 영역에 SQL문에 맞는 태그를 사용하여 SQL문을 기술한다.
+	
+	사용할 수 있는 기본적인 태그들
+	
+	<select> ~~~ </select>
+	<insert> ~~~ </insert>
+	<update> ~~~ </update>
+	<delete> ~~~ </delete>
+
+	위 태그에서 사용되는 주요 속성들
+	
+	1) id (필수값) : 해당 SQL문을 호출할 때 namespace값과 열결하여 사용하는 ID값
+	
+	2) parameterType : SQL문에 사용될 데이터를 담은 객체 타입을 지정한다. => 생략 가능
+					   (보통 VO클래스, 자바의 기본타입명 등이 사용된다.)
+	
+	3) resultType : select문을 실행한 결과를 담기 위한 객체 타입을 지정한다. select일 때만 사용.
+					   (보통 VO클래스, 자바의 기본타입명 등이 사용된다.)
+	
+	4) resultMap : 결과 레코드 컬럼명과 VO 객체의 속성명이 다를 경우에 적절한 매핑 작업을 위해 사용한다.
+	
+ -->
+
+	<insert id="insertMember" parameterType="kr.or.ddit.vo.MemberVO">
+		
+		<!-- MemberVO 안에 있는 속성값을 지정해서 꺼냄. ?는 MyBatis가 인식하지 못하기 때문. -->
+		INSERT INTO MYMEMBER (MEM_ID, MEM_NAME, MEM_TEL, MEM_ADDR) 
+		VALUES (#{memId}, #{memName}, #{memTel}, #{memAddr})
+	
+	</insert>
+	
+	
+	<update id="updateMember" parameterType="kr.or.ddit.vo.MemberVO">
+		
+		UPDATE MYMEMBER
+		SET MEM_NAME = #{memName}, MEM_TEL = #{memTel}, MEM_ADDR = #{memAddr}
+		WHERE MEM_ID = #{memId}
+	
+	</update>
+	
+	
+	<delete id="deleteMember" parameterType="String">
+		
+		DELETE FROM MYMEMBER WHERE MEM_ID = #{memId} <!-- String 같이 단일로 오는 경우에는 아무거나 써도 됨(뭐든 쓰긴 해야함) -->
+	
+	</delete>
+	
+	
+	<select id="selectAllMember" resultType="kr.or.ddit.vo.MemberVO">
+		
+		SELECT MEM_ID memId, MEM_NAME memName, MEM_TEL memTel, MEM_ADDR memAddr, REG_DT regDt 
+		FROM MYMEMBER
+	
+	</select>
+	
+	
+	<select id="checkMember" resultType="int">
+		
+		SELECT COUNT(*) cnt
+		FROM MYMEMBER
+		WHERE MEM_ID = #{memId}
+	
+	</select>
+	
+	
+	<!-- 	parameterType="String" => 생략 가능 -->
+	<!-- 	<select id="getMember" parameterType="String" resultType="vo.MemberVO"> -->
+	<select id="getMember" resultType="kr.or.ddit.vo.MemberVO">
+		
+		SELECT MEM_ID memId, MEM_NAME memName, MEM_TEL memTel, MEM_ADDR memAddr, REG_DT regDt 
+		FROM MYMEMBER
+		WHERE MEM_ID = #{memId}
+	
+	</select>
+	
+	
+	<!-- VO가 아닌 Map을 이용한 방식 -->
+	<select id="getMember2" parameterType="Map" resultType="HashMap">
+		
+		SELECT MEM_ID, MEM_NAME, MEM_TEL, MEM_ADDR, REG_DT 
+		FROM MYMEMBER
+		WHERE MEM_ID = #{memId}
+	
+	</select>
+	
+	
+		<!-- VO가 아닌 List를 이용한 방식 // foreach를 써서 함 아직 안 배움, 추후에 한번 해주신다고 함-->
+	<select id="getMember3" parameterType="List" resultType="kr.or.ddit.vo.MemberVO">
+		
+		SELECT MEM_ID memId, MEM_NAME memName, MEM_TEL memTel, MEM_ADDR memAddr, REG_DT regDt 
+		FROM MYMEMBER
+		WHERE MEM_ID = #{memId} AND MEM_NAME = #{memName}
+	
+	</select>
+	
+	
+	<select id="searchMember" resultType="kr.or.ddit.vo.MemberVO">
+		
+		SELECT MEM_ID memId, MEM_NAME memName, MEM_TEL memTel, MEM_ADDR memAddr, REG_DT regDt 
+		FROM MYMEMBER
+		<where>
+			<!-- ''을 썼을 경우에 평소에는 문제가 없지만, 'a'처럼 1글자만 들어올 경우에는 char 타입으로 인식하여 변환하기 때문에 문제가 생길 수 있음 -->
+			<!-- 문자열을 비교할 경우, !와 equals() 둘 다 사용가능 -->
+			<if test=' memId != null and memId != "" '>
+				and mem_id = #{memId}
+			</if>
+			
+			<if test=' memName != null and memName != "" '>
+				and mem_name = #{memName}
+			</if>
+			
+			<if test=' memTel != null and !memTel.equals("") '>
+				and mem_tel = #{memTel}
+			</if>
+			
+			<if test=' memAddr != null and !memAddr.equals("") '>
+				and mem_addr like '%' || #{memAddr} || '%'
+			</if>
+		</where>
+	
+	</select>
+
+
+</mapper>
