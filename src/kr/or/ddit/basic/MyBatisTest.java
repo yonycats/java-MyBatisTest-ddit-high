@@ -68,7 +68,7 @@ public class MyBatisTest {
 //		try {
 //			// 형식) insert("namespace값.쿼리ID값", 파라미터객체);
 //			// 정상적으로 실행된 레코드 수가 반환됨
-//			int cnt = session.insert("memberTest.insertMember", mv);
+//			int cnt = session.insert("member.insertMember", mv);
 //			
 //			if (cnt > 0) {
 //				System.out.println("insert 작업 성공!");
@@ -105,7 +105,7 @@ public class MyBatisTest {
 		
 		try {
 			// 정상적으로 실행된 레코드 수가 반환됨
-			int cnt = session.update("memberTest.updateMember", mv);
+			int cnt = session.update("member.updateMember", mv);
 			
 			if (cnt > 0) {
 				System.out.println("update 작업 성공!");
@@ -138,7 +138,7 @@ public class MyBatisTest {
 		
 		try {
 			// 정상적으로 실행된 레코드 수가 반환됨
-			int cnt = session.delete("memberTest.deleteMember", "d001");
+			int cnt = session.delete("member.deleteMember", "d001");
 			
 			if (cnt > 0) {
 				System.out.println("delete 작업 성공!");
@@ -171,7 +171,7 @@ public class MyBatisTest {
 		session = SqlSessionFactory.openSession(true); // autoCommit 켜기 (select는 커밋 필요없음)
 		
 		try {
-			List<MemberVO> memList = session.selectList("memberTest.selectAllMember");
+			List<MemberVO> memList = session.selectList("member.selectAllMember");
 
 			for (MemberVO mv2 : memList) {
 				System.out.println("ID : " + mv2.getMemId());
@@ -201,7 +201,7 @@ public class MyBatisTest {
 		// autoCommit 기능을 켜서 트랜잭션 관리를 별도로 따로 하지 않을 것임
 		
 		try {
-			MemberVO mv3 = session.selectOne("memberTest.getMember", "d001");
+			MemberVO mv3 = session.selectOne("member.getMember", "d001");
 			
 			System.out.println("ID : " + mv3.getMemId());
 			System.out.println("이름 : " + mv3.getMemName());
@@ -233,14 +233,14 @@ public class MyBatisTest {
 			paramMap.put("memId", "d001");
 			
 			// 파라미터 타입을 지정 안하고 Map을 넣어도 되긴 함
-			MemberVO mv3 = session.selectOne("memberTest.getMember", paramMap);
+			MemberVO mv3 = session.selectOne("member.getMember", paramMap);
 			System.out.println("ID : " + mv3.getMemId());
 			System.out.println("이름 : " + mv3.getMemName());
 			System.out.println("전화 : " + mv3.getMemTel());
 			System.out.println("주소 : " + mv3.getMemAddr());
 			
 			
-			Map<String, Object> resultMap = session.selectOne("memberTest.getMember2", paramMap);
+			Map<String, Object> resultMap = session.selectOne("member.getMember2", paramMap);
 			System.out.println("ID : " + resultMap.get("MEM_ID"));
 			System.out.println("이름 : " + resultMap.get("MEM_NAME"));
 			System.out.println("전화 : " + resultMap.get("MEM_TEL"));
@@ -274,14 +274,14 @@ public class MyBatisTest {
 			list.add("김고추");
 			
 			// 파라미터 타입을 지정 안하고 Map을 넣어도 되긴 함
-//			MemberVO mv3 = session.selectOne("memberTest.getMember3", list);
+//			MemberVO mv3 = session.selectOne("member.getMember3", list);
 //			System.out.println("ID : " + mv3.getMemId());
 //			System.out.println("이름 : " + mv3.getMemName());
 //			System.out.println("전화 : " + mv3.getMemTel());
 //			System.out.println("주소 : " + mv3.getMemAddr());
 			
 			
-//			List<String> list = session.selectOne("memberTest.getMember3", list);
+//			List<String> list = session.selectOne("member.getMember3", list);
 //			System.out.println("ID : " + resultMap.get("MEM_ID"));
 //			System.out.println("이름 : " + resultMap.get("MEM_NAME"));
 //			System.out.println("전화 : " + resultMap.get("MEM_TEL"));
